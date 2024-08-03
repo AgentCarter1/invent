@@ -1,11 +1,12 @@
 import express from "express";
+import userRoutes from "./routes/user.route";
+import bookRoutes from "./routes/book.route";
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+app.use(userRoutes);
+app.use(bookRoutes);
 
 export default app;
