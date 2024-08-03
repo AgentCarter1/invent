@@ -14,7 +14,10 @@ export const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await UserService.getUserById(Number(req.params.id));
     if (user) {
-      res.json(user);
+      const userWithBooks = await UserService.getUserWithBooks(
+        Number(req.params.id)
+      );
+      res.json(userWithBooks);
     } else {
       res.status(404).json({ error: "User not found." });
     }

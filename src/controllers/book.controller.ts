@@ -14,7 +14,10 @@ export const getBookById = async (req: Request, res: Response) => {
   try {
     const book = await BookService.getBookById(Number(req.params.id));
     if (book) {
-      res.json(book);
+      const bookWithScore = await BookService.getBookWithScore(
+        Number(req.params.id)
+      );
+      res.json(bookWithScore);
     } else {
       res.status(404).json({ error: "Book not found." });
     }
@@ -27,8 +30,8 @@ export const getBookById = async (req: Request, res: Response) => {
 
 export const createBook = async (req: Request, res: Response) => {
   try {
-    const { name, rating } = req.body;
-    const book = await BookService.createBook(name, rating);
+    const { name } = req.body;
+    const book = await BookService.createBook(name);
     res.status(201).json(book);
   } catch (error) {
     res

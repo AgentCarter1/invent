@@ -1,12 +1,15 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database/database.connection";
+import BorrowedBook from "./borrow-book.model";
 
 class Book extends Model {
   public id!: number;
   public name!: string;
-  public rating!: number;
   public createdAt!: Date;
   public updatedAt!: Date;
+
+  // İlişkili modellerin tanımlanması
+  public BorrowedBooks?: BorrowedBook[];
 }
 
 Book.init(
@@ -19,11 +22,6 @@ Book.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    rating: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
-      defaultValue: 0,
     },
   },
   {

@@ -1,5 +1,7 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, BelongsToGetAssociationMixin } from "sequelize";
 import { sequelize } from "../database/database.connection";
+import User from "./user.model";
+import Book from "./book.model";
 
 class BorrowedBook extends Model {
   public id!: number;
@@ -7,7 +9,14 @@ class BorrowedBook extends Model {
   public bookId!: number;
   public borrowedAt!: Date;
   public returnedAt!: Date | null;
-  public rating!: number | null;
+  public score!: number | null;
+
+  // İlişkili modellerin tipleri
+  public getBook!: BelongsToGetAssociationMixin<Book>;
+  public getUser!: BelongsToGetAssociationMixin<User>;
+
+  public readonly Book?: Book;
+  public readonly User?: User;
 }
 
 BorrowedBook.init(
@@ -21,7 +30,7 @@ BorrowedBook.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "User",
+        model: User,
         key: "id",
       },
     },
@@ -29,7 +38,7 @@ BorrowedBook.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Book",
+        model: Book,
         key: "id",
       },
     },
@@ -41,7 +50,7 @@ BorrowedBook.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    rating: {
+    score: {
       type: DataTypes.FLOAT,
       allowNull: true,
     },

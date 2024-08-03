@@ -7,19 +7,21 @@ class BorrowService {
       bookId,
       borrowedAt: new Date(),
       returnedAt: null,
-      rating: null,
+      score: null,
     });
   }
 
-  async returnBook(id: number, rating: number) {
-    const borrowedBook = await BorrowedBook.findByPk(id);
+  async returnBook(userId: number, bookId: number, score: number) {
+    const borrowedBook = await BorrowedBook.findOne({
+      where: { userId, bookId, returnedAt: null },
+    });
     if (borrowedBook) {
       borrowedBook.returnedAt = new Date();
-      borrowedBook.rating = rating;
+      borrowedBook.score = score;
       await borrowedBook.save();
       return borrowedBook;
     }
-    return null;
+    throw new Error("Borrowed book not found");
   }
 }
 
