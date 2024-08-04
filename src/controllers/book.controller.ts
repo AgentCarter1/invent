@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import BookService from "../services/book.service";
+import CustomException from "../errors/custom-exception";
 
 export const listBooks = async (req: Request, res: Response) => {
   try {
@@ -13,18 +14,15 @@ export const listBooks = async (req: Request, res: Response) => {
 export const getBookById = async (req: Request, res: Response) => {
   try {
     const book = await BookService.getBookById(Number(req.params.id));
-    if (book) {
-      const bookWithScore = await BookService.getBookById(
-        Number(req.params.id)
-      );
-      res.json(bookWithScore);
-    } else {
-      res.status(404).json({ error: "Book not found." });
-    }
+    res.json(book);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the book." });
+    if (error instanceof CustomException) {
+      res.status(error.statusCode).json({ error: error.message });
+    } else {
+      res
+        .status(500)
+        .json({ error: "An error occurred while fetching the book." });
+    }
   }
 };
 

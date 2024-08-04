@@ -1,5 +1,5 @@
 import Book from "../models/book.model";
-import BorrowedBook from "../models/borrow-book.model";
+import CustomException from "../errors/custom-exception";
 
 class BookService {
   async getAllBooks() {
@@ -9,9 +9,13 @@ class BookService {
   }
 
   async getBookById(id: number) {
-    return Book.findByPk(id, {
+    const book = await Book.findByPk(id, {
       attributes: ["id", "name"],
     });
+    if (!book) {
+      throw new CustomException(404, "Book not found.");
+    }
+    return book;
   }
 
   async createBook(name: string) {

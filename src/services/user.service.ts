@@ -1,4 +1,5 @@
 import User from "../models/user.model";
+import CustomException from "../errors/custom-exception";
 
 class UserService {
   async getAllUsers() {
@@ -8,9 +9,13 @@ class UserService {
   }
 
   async getUserById(id: number) {
-    return User.findByPk(id, {
+    const user = await User.findByPk(id, {
       attributes: ["id", "name"],
     });
+    if (!user) {
+      throw new CustomException(404, "User not found.");
+    }
+    return user;
   }
 
   async createUser(name: string) {
