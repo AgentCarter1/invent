@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UserService from "../services/user.service";
+import CustomException from "../errors/custom-exception";
 
 export const listUsers = async (req: Request, res: Response) => {
   try {
@@ -13,15 +14,15 @@ export const listUsers = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await UserService.getUserById(Number(req.params.id));
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ error: "User not found." });
-    }
+    res.json(user);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the user." });
+    if (error instanceof CustomException) {
+      res.status(error.statusCode).json({ error: error.message });
+    } else {
+      res
+        .status(500)
+        .json({ error: "An error occurred while fetching the user." });
+    }
   }
 };
 
