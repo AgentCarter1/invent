@@ -14,7 +14,7 @@ export const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await UserService.getUserById(Number(req.params.id));
     if (user) {
-      const userWithBooks = await UserService.getUserWithBooks(
+      const userWithBooks = await UserService.getUserById(
         Number(req.params.id)
       );
       res.json(userWithBooks);
