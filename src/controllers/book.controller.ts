@@ -14,7 +14,7 @@ export const getBookById = async (req: Request, res: Response) => {
   try {
     const book = await BookService.getBookById(Number(req.params.id));
     if (book) {
-      const bookWithScore = await BookService.getBookWithScore(
+      const bookWithScore = await BookService.getBookById(
         Number(req.params.id)
       );
       res.json(bookWithScore);
