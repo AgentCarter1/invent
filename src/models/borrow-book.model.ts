@@ -11,7 +11,6 @@ class BorrowedBook extends Model {
   public returnedAt!: Date | null;
   public score!: number | null;
 
-  // İlişkili modellerin tipleri
   public getBook!: BelongsToGetAssociationMixin<Book>;
   public getUser!: BelongsToGetAssociationMixin<User>;
 

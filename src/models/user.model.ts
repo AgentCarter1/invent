@@ -8,7 +8,6 @@ class User extends Model {
   public createdAt!: Date;
   public updatedAt!: Date;
 
-  // İlişkili modellerin tanımlanması
   public BorrowedBooks?: BorrowedBook[];
 }
 
