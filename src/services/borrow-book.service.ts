@@ -2,6 +2,12 @@ import BorrowedBook from "../models/borrow-book.model";
 
 class BorrowService {
   async borrowBook(userId: number, bookId: number) {
+    const isBorrowedBook = await BorrowedBook.findOne({
+      where: { userId, bookId, returnedAt: null },
+    });
+
+    if (isBorrowedBook) throw new Error("You Have Already Borrowed Book");
+
     return BorrowedBook.create({
       userId,
       bookId,
@@ -15,6 +21,7 @@ class BorrowService {
     const borrowedBook = await BorrowedBook.findOne({
       where: { userId, bookId, returnedAt: null },
     });
+
     if (borrowedBook) {
       borrowedBook.returnedAt = new Date();
       borrowedBook.score = score;
