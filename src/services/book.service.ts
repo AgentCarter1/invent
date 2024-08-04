@@ -2,15 +2,17 @@ import Book from "../models/book.model";
 import CustomException from "../errors/custom-exception";
 
 class BookService {
+  private readonly attributes: Array<keyof Book> = ["id", "name"];
+
   async getAllBooks() {
     return Book.findAll({
-      attributes: ["id", "name"],
+      attributes: this.attributes,
     });
   }
 
   async getBookById(id: number) {
     const book = await Book.findByPk(id, {
-      attributes: ["id", "name"],
+      attributes: this.attributes,
     });
     if (!book) {
       throw new CustomException(404, "Book not found.");
