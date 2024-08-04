@@ -1,4 +1,5 @@
 import BorrowedBook from "../models/borrow-book.model";
+import CustomException from "../errors/custom-exception";
 
 class BorrowService {
   async borrowBook(userId: number, bookId: number) {
@@ -6,7 +7,8 @@ class BorrowService {
       where: { userId, bookId, returnedAt: null },
     });
 
-    if (isBorrowedBook) throw new Error("You Have Already Borrowed Book");
+    if (isBorrowedBook)
+      throw new CustomException(400, "You have already borrowed this book");
 
     return BorrowedBook.create({
       userId,
@@ -22,13 +24,14 @@ class BorrowService {
       where: { userId, bookId, returnedAt: null },
     });
 
-    if (borrowedBook) {
-      borrowedBook.returnedAt = new Date();
-      borrowedBook.score = score;
-      await borrowedBook.save();
-      return borrowedBook;
+    if (!borrowedBook) {
+      throw new CustomException(404, "Borrowed book not found");
     }
-    throw new Error("Borrowed book not found");
+
+    borrowedBook.returnedAt = new Date();
+    borrowedBook.score = score;
+    await borrowedBook.save();
+    return borrowedBook;
   }
 }
 
