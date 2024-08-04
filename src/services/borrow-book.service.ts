@@ -1,5 +1,9 @@
 import BorrowedBook from "../models/borrow-book.model";
 import CustomException from "../errors/custom-exception";
+import {
+  BorrowedBookAttributesEnum,
+  BorrowedBookAttributes,
+} from "../types/borrow-book.types";
 
 class BorrowService {
   async borrowBook(userId: number, bookId: number) {
@@ -21,12 +25,19 @@ class BorrowService {
 
     const cleanBook = await BorrowedBook.findByPk(borrowedBook.id, {
       attributes: {
-        exclude: ["id", "createdAt", "updatedAt", "returnedAt", "score"],
+        exclude: [
+          BorrowedBookAttributesEnum.Id,
+          BorrowedBookAttributesEnum.Score,
+          BorrowedBookAttributesEnum.ReturnedAt,
+          BorrowedBookAttributesEnum.CreatedAt,
+          BorrowedBookAttributesEnum.UpdatedAt,
+        ],
       },
     });
 
-    return cleanBook;
+    return cleanBook as BorrowedBookAttributes;
   }
+
   async returnBook(userId: number, bookId: number, score: number) {
     const borrowedBook = await BorrowedBook.findOne({
       where: { userId, bookId, returnedAt: null },
@@ -41,10 +52,16 @@ class BorrowService {
     await borrowedBook.save();
 
     const cleanBook = await BorrowedBook.findByPk(borrowedBook.id, {
-      attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+      attributes: {
+        exclude: [
+          BorrowedBookAttributesEnum.Id,
+          BorrowedBookAttributesEnum.CreatedAt,
+          BorrowedBookAttributesEnum.UpdatedAt,
+        ],
+      },
     });
 
-    return cleanBook;
+    return cleanBook as BorrowedBookAttributes;
   }
 }
 
