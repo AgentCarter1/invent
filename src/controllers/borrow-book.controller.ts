@@ -5,8 +5,11 @@ import CustomException from "../errors/custom-exception";
 export const borrowBook = async (req: Request, res: Response) => {
   try {
     const { userId, bookId } = req.params;
-    await BorrowService.borrowBook(Number(userId), Number(bookId));
-    res.status(204).end();
+    const borrowedBook = await BorrowService.borrowBook(
+      Number(userId),
+      Number(bookId)
+    );
+    res.status(201).json(borrowedBook);
   } catch (error) {
     if (error instanceof CustomException) {
       res.status(error.statusCode).json({ error: error.message });
@@ -21,9 +24,13 @@ export const returnBook = async (req: Request, res: Response) => {
     const { userId, bookId } = req.params;
     const { score } = req.body;
 
-    await BorrowService.returnBook(Number(userId), Number(bookId), score);
+    const returnedBook = await BorrowService.returnBook(
+      Number(userId),
+      Number(bookId),
+      score
+    );
 
-    res.status(204).end();
+    res.status(200).json(returnedBook);
   } catch (error) {
     if (error instanceof CustomException) {
       res.status(error.statusCode).json({ error: error.message });

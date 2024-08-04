@@ -7,18 +7,26 @@ class BorrowService {
       where: { userId, bookId, returnedAt: null },
     });
 
-    if (isBorrowedBook)
+    if (isBorrowedBook) {
       throw new CustomException(400, "You have already borrowed this book");
+    }
 
-    return BorrowedBook.create({
+    const borrowedBook = await BorrowedBook.create({
       userId,
       bookId,
       borrowedAt: new Date(),
       returnedAt: null,
       score: null,
     });
-  }
 
+    const cleanBook = await BorrowedBook.findByPk(borrowedBook.id, {
+      attributes: {
+        exclude: ["id", "createdAt", "updatedAt", "returnedAt", "score"],
+      },
+    });
+
+    return cleanBook;
+  }
   async returnBook(userId: number, bookId: number, score: number) {
     const borrowedBook = await BorrowedBook.findOne({
       where: { userId, bookId, returnedAt: null },
@@ -31,7 +39,12 @@ class BorrowService {
     borrowedBook.returnedAt = new Date();
     borrowedBook.score = score;
     await borrowedBook.save();
-    return borrowedBook;
+
+    const cleanBook = await BorrowedBook.findByPk(borrowedBook.id, {
+      attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+    });
+
+    return cleanBook;
   }
 }
 
