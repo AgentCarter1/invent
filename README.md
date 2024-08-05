@@ -16,10 +16,11 @@ This project is a library management system developed using Node.js with Express
 ### env File
 Create .env file like .env.sample
 
+
 ### Start Database 
-⁠ bash
+```bash
 docker run --name postgres-db -e POSTGRES_PASSWORD=db_password -e POSTGRES_USER=db_user -e POSTGRES_DB=db_name -p 5432:5432 -d postgres
- ⁠
+```
 
 ### Install packages
 ⁠ bash
@@ -27,9 +28,9 @@ npm install
 npm run build
 
 ### Start Project
-⁠ bash
+```bash
 npm start
- ⁠
+```
 
 ## License
 
